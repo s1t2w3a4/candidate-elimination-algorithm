@@ -1,0 +1,30 @@
+# Define the dataset
+data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change', 'No'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Cool', 'Change', 'Yes'],
+]
+
+# Separate features and target
+features = [row[:-1] for row in data]
+target = [row[-1] for row in data]
+
+# Initialize Specific (S) and General (G) hypotheses
+specific_h = features[0]  # Start with the first positive example
+general_h = [['?'] * len(specific_h)]  # General hypothesis starts with all '?'
+
+# Candidate Elimination Algorithm
+for i in range(len(features)):
+    if target[i] == 'Yes':  # For positive examples
+        for j in range(len(specific_h)):
+            if features[i][j] != specific_h[j]:
+                specific_h[j] = '?'  # Generalize specific hypothesis
+    elif target[i] == 'No':  # For negative examples
+        for j in range(len(specific_h)):
+            if features[i][j] == specific_h[j]:
+                general_h[0][j] = '?'  # Specialize general hypothesis
+
+# Print Final Hypotheses
+print("Final Specific Hypothesis:", specific_h)
+print("Final General Hypothesis:", general_h)
